@@ -47,6 +47,8 @@
 
       systems = ["x86_64-linux"];
       imports = [
+        inputs.treefmt-nix.flakeModule
+        inputs.pre-commit-hooks.flakeModule
         inputs.nixos-flake.flakeModule
         ./nixos
         ./home
@@ -55,12 +57,12 @@
     };
     
     perSystem = {
-        self,
+        self',
         system,
         pkgs,
         lib,
         config,
-        inputs,
+        inputs',
         ...
       }: {
         nixos-flake.primary-inputs = ["nixpkgs" "home-manager" "nixos-flake"];
@@ -98,24 +100,24 @@
           allpkgs = pkgs.symlinkJoin {
             name = "all";
             paths = [
-              self.packages.activate
-              self.packages.nix-cleanup
-              self.packages.nixos-cleanup
+              self'.packages.activate
+              self'.packages.nix-cleanup
+              self'.packages.nixos-cleanup
             ];
           };
         in {
           default = allpkgs;
-          activate = self.packages.activate;
-          nix-cleanup = self.packages.nix-cleanup;
-          nixos-cleanup = self.packages.nixos-cleanup;
+          activate = self'.packages.activate;
+          nix-cleanup = self'.packages.nix-cleanup;
+          nixos-cleanup = self'.packages.nixos-cleanup;
           all = allpkgs;
         };
 
-        _module.args.pkgs = import inputs.nixpkgs {
+        _module.args.pkgs = import inputs'.nixpkgs {
           inherit system;
           overlays = [
             (import ./packages {
-              flake = self;
+              flake = self';
               inherit (pkgs) system;
             })
           ];
