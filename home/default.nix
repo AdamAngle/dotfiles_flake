@@ -15,6 +15,17 @@
           ./fonts.nix
         ];
       };
+      common-linux = {
+        imports = [
+          self.homeModules.common
+          ({pkgs, ...}: {
+            home.packages = with pkgs; [
+              nixos-cleanup
+            ];
+          })
+        ];
+      };
+      
     };
   };
 

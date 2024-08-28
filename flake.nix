@@ -2,7 +2,7 @@
   description = "Jasmine's Nix flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
 
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -30,16 +30,21 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = inputs @ { self, nixpkgs }:
+  outputs = inputs @ { self, nixpkgs, ... }:
     inputs.flake-parts.lib.mkFlake {inherit inputs;} {
-      systems = ["x86_64-linux"];
 
+#      nixosConfiguration.nixos = nixpkgs.lib.nixosSystem {
+#        system = "x86_64-linux";
+#        modules = [ ./system/configuration.nix ];
+#      };
+
+      systems = ["x86_64-linux"];
       imports = [
         inputs.nixos-flake.flakeModule
+        ./nixos
         ./home
         ./config
-      ];
-   
+      ];   
     };
-  
+
 }
