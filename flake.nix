@@ -1,5 +1,5 @@
 {
-  description = "A very basic flake";
+  description = "Jasmine's Nix flake";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
@@ -30,15 +30,16 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs }: {
+  outputs = inputs @ { self, nixpkgs }:
+    inputs.flake-parts.lib.mkFlake {inherit inputs;} {
+      systems = ["x86_64-linux"];
 
-    systems = ["x86_64-linux"];
-
-    imports = [
-      inputs.nixos-flake.flakeModule
-      ./home
-      ./config
-    ]
-
-  };
+      imports = [
+        inputs.nixos-flake.flakeModule
+        ./home
+        ./config
+      ];
+   
+    };
+  
 }
