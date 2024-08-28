@@ -2,10 +2,30 @@
   self,
   flake,
   config,
+  nixpkgs,
   ...
 }: {
   # Configuration common to all Linux systems
   flake = {
+    
+    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+      modules = [
+        ./system
+      ];
+    };
+
+#    nixosConfigurations.nixos = withSystem "x86_64-linux" ({pkgs, system}:
+#      nixpkgs.lib.nixosSystem {
+#        inherit system;
+#        modules = [
+#          ./system
+#        ] ++ shared;
+#        specialArgs = {
+#          inherit inputs pkgs;
+#        };
+#      }
+#    );
+
     nixosModules = {
       # NixOS modules that are known to work on nix-darwin.
       common.imports = [
