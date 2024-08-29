@@ -5,16 +5,17 @@
   nixpkgs,
   ...
 }: {
+
+  nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
+    system = "x86_64-linux";
+    modules = [
+      ./system
+    ];
+  };
+
   # Configuration common to all Linux systems
   flake = {
     
-    nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
-      modules = [
-        ./system
-      ];
-    };
-
 #    nixosConfigurations.nixos = withSystem "x86_64-linux" ({pkgs, system}:
 #      nixpkgs.lib.nixosSystem {
 #        inherit system;
